@@ -1,0 +1,3 @@
+python3 evaluate.py fr_mentcoref test.french.jsonlines eval_dem1921_mentcoref_smallwin.jsonlines
+python3 evaluate.py fr_coref test.french.jsonlines eval_dem1921_coref_smallwin.jsonlines
+python3 evaluate.py fr_ment,fr_coref test.french.jsonlines eval_dem1921_2models_smallwin.jsonlines

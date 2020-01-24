@@ -1,0 +1,152 @@
+# coFR: COreference resolution tool For FRench
+
+
+## Introduction
+
+This repository contains an adaptation of the [Kantor and Globerson's coreference resolution tool](https://github.com/kentonl/e2e-coref) (described in Kantor and Globerson, 2019) to French.  The adaptation has been developed by Rodrigo Wilkens, Bruno Oberle, Frédéric Landragin and Amalia Todirascu.
+
+For training and evaluation, we used two French corpora:
+
+- Democrat (Landragin, 2016),
+- Ancor (Muzerelle et al., 2014).
+
+We converted the corpora into the `jsonlines` format used by the original system.  The Democrat corpus, originally composed of 10000-word-long chunks of longer texts has been split down to 2000-word-long documents.  We kept only the texts from the 19th century to the 20th century.  The Ancor corpus has been cut into thematic sections.  The corpus used are available for download below.
+
+We have trained three models:
+
+- `fr_mentcoref`: the model has been trained to detect mentions (all mentions, including singletons) and to resolve coreference,
+- `fr_ment`: the model has been trained to detect mentions (all mentions) only,
+- `fr_coref`: the model has been trained to resolve coreference only (oracle mentions are to be fed to the system in order to use this model).
+
+We report the results of three experiments:
+
+- using the model `fr_mentcoref`: this is the original end-to-end setup, in which one model both detects mentions and resolves coreference,
+- using the model `fr_coref`: this is used to evaluate the coreference resolution task proper (as opposed to the combined two subtasks of mention detection and coreference resolution).  Oracle mentions are given to the system,
+- using a sequence of two models: `fr_ment`, specialized for mention detection, and `fr_coref`, specialized for coreference resolution.
+
+Features must be extracted before training or evaluating the model (this step is called `bertification` since it uses [BERT](https://github.com/google-research/bert) (Bidirectional Encoder Representations from Transformers)).  We tested two window sizes, the default one (511) and the one proposed by Kantor and Globerson (129).  The bigger window yields slightly better results, but the bertification process is longer (about 8x).  All our pretrained models use the bigger window size.
+
+
+<table class="tg">
+  <tr>
+    <th class="tg-0lax"></th>
+    <th class="tg-baqh" colspan="3">default window size (511)</th>
+    <th class="tg-baqh" colspan="3">small window size (129)</th>
+  </tr>
+  <tr>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky">fr_mentcoref<br></td>
+    <td class="tg-0pky">fr_coref</td>
+    <td class="tg-fymr">fr_ment + fr_coref</td>
+    <td class="tg-0pky">fr_mentcoref</td>
+    <td class="tg-0lax">fr_coref</td>
+    <td class="tg-0lax">fr_ment + fr_coref</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">dem1921 (mention identification)</td>
+    <td class="tg-0pky">76.36</td>
+    <td class="tg-0pky">99.96</td>
+    <td class="tg-fymr">88.95</td>
+    <td class="tg-0pky">75.88</td>
+    <td class="tg-0lax">99.96</td>
+    <td class="tg-0lax">88.58</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">dem1921 (conll f1)</td>
+    <td class="tg-0pky">66.00</td>
+    <td class="tg-0pky">85.04</td>
+    <td class="tg-fymr">75.00</td>
+    <td class="tg-0pky">65.38</td>
+    <td class="tg-0lax">84.84</td>
+    <td class="tg-0lax">74.97</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">ancor (mention identification)</td>
+    <td class="tg-0pky">52.75</td>
+    <td class="tg-0pky">99.99</td>
+    <td class="tg-fymr">88.06</td>
+    <td class="tg-0pky">52.37</td>
+    <td class="tg-0lax">99.99</td>
+    <td class="tg-0lax">88.03</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">ancor (conll f1)</td>
+    <td class="tg-0lax">50.50</td>
+    <td class="tg-0lax">88.75</td>
+    <td class="tg-1wig">75.65</td>
+    <td class="tg-0lax">50.48</td>
+    <td class="tg-0lax">88.45</td>
+    <td class="tg-0lax">75.47</td>
+  </tr>
+</table>
+
+
+Note that these results include singleton mentions, which are available in both French corpora, but not in the standard corpus used for evaluation of English systems (OntoNotes/CoNLL 2012).
+
+These scores were obtained with the official [scorer script](https://github.com/conll/reference-coreference-scorers) used for the CoNLL 2012 evaluation compaign.
+
+
+References:
+- Kantor and Globerson, 2019. "Coreference Resolution with Entity Equalization",
+- Landragin, 2016. "Description, modélisation et détection automatique des chaı̂nes de référence (DEMOCRAT). Bulletin de l'Association Française pour l'Intelligence Artificielle.
+- Muzerelle, Lefeuvre, Schang, Antoine Pelletier, Maurel, Eshkol and Villaneau 2014. ANCOR centre, a large free spoken french coreference corpus: description of the resource and reliability measures. In Proceedings of the 9th Language Resources and Evaluation Conference (LREC'2014).
+
+
+
+## Getting started
+
+First install the library requirements
+
+```bash
+pip3 install -r requirements.txt
+```
+
+Examples below use Democrat.  If you prefer to train and evaluate with Ancor, use the `setup_{corpus,models}_ancor.sh` scripts and adapt the `experiments.conf` configuration file (search for `ancor` and `democrat` and comment/uncomment parameters according to your corpus).
+
+
+### Evaluating
+
+To reproduce our results, please run the following commands:
+
+```
+bash -x -e setup_all.sh
+bash -x -e setup_corpus_dem1921.sh
+bash -x -e setup_models_dem1921.sh
+bash -x -e extract_bert_features.sh test.french.jsonlines evaluate
+python3 evaluate.py fr_ment,fr_coref test.french.jsonlines
+```
+
+This will download the corpus and our pretrained models.
+
+Note that the longest part is the bertification and should be done with a GPU.  As said before, you can reduce the window size to 129.  This would yield slightly lower results but will dramatically decrease the bertification time.
+
+
+### Training
+
+To train new models, please run the following commands:
+
+```
+bash -x -e setup_all.sh
+bash -x -e setup_corpus_dem1921.sh
+bash -x -e setup_training.sh
+python3 train.py train_fr_ment
+python3 train.py train_fr_coref
+```
+
+### Predicting
+
+To make predictions with our pretrained models, you will need to convert your corpus in the `jsonlines` format (see the `detail_instructions.md` file).  For a demo, you can use one the document of the Democrat corpus:
+
+
+```
+bash -x -e setup_all.sh
+bash -x -e setup_models_dem1921.sh
+bash -x -e setup_corpus_dem1921.sh
+head -n 5 test.french.jsonlines | shuf | head -n 1 > myfile.jsonlines
+python3 predict.py fr_ment,fr_coref myfile.jsonlines mypredictions.jsonlines
+```
+
+## License
+
+This work is published under the terms of the Apache 2.0 licence.  See the `LICENSE` file for more information.
+
