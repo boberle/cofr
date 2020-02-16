@@ -100,7 +100,7 @@ References:
 
 ## Getting started
 
-First install the library requirements
+First install the library requirements.  By default, we use `tensorflow-gpu`.  Install `tensorflow` if you want to use your CPU.
 
 ```bash
 pip3 install -r requirements.txt
@@ -140,6 +140,14 @@ python3 train.py train_fr_coref
 
 ### Predicting
 
+First, you will need to download [BERT Multilingual](https://github.com/google-research/bert):
+
+```
+wget https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip
+unzip multi_cased_L-12_H-768_A-12.zip
+rm multi_cased_L-12_H-768_A-12.zip
+```
+
 To make predictions with our pretrained models, you will need to convert your corpus in the `jsonlines` format (see the `detail_instructions.md` file).  For a demo, you can use one the document of the Democrat corpus:
 
 
@@ -150,6 +158,16 @@ bash -x -e setup_corpus_dem1921.sh
 head -n 5 test.french.jsonlines | shuf | head -n 1 > myfile.jsonlines
 python3 predict.py fr_ment,fr_coref myfile.jsonlines mypredictions.jsonlines
 ```
+
+
+## Going further
+
+See the `detail_instructions.md` file for more information.
+
+
+## Other Quirks
+
+* It does not use GPUs by default. Instead, it looks for the `GPU` environment variable, which the code treats as shorthand for `CUDA_VISIBLE_DEVICES`.
 
 ## License
 

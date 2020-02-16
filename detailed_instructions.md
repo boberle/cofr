@@ -114,7 +114,4 @@ Note that if you use your own corpus, you will need to adapt `char_vocab.french.
 `python3 get_char_vocab.py` script.
 
 
-## Other Quirks
-
-* It does not use GPUs by default. Instead, it looks for the `GPU` environment variable, which the code treats as shorthand for `CUDA_VISIBLE_DEVICES`.
 
