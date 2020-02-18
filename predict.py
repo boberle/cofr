@@ -50,6 +50,9 @@ def run(config, input_filename, output_filename, cluster_key):
             predicted_antecedents = model.get_predicted_antecedents(top_antecedents, top_antecedent_scores)
             example[cluster_key], _ = model.get_predicted_clusters(top_span_starts, top_span_ends, predicted_antecedents)
 
+          if cluster_key == "predicted_clusters" and "clusters" in example:
+             del example["clusters"]
+
           output_file.write(json.dumps(example))
           output_file.write("\n")
           if example_num % 100 == 0:
@@ -93,7 +96,7 @@ if __name__ == "__main__":
   else:
     config = util.initialize_from_env(sys.argv[1])
     must_bertify = "--no-bertify" not in sys.argv
-    cluster_key = "clusters" if "--no-predicted" not in sys.argv else "predicted_clusters"
+    cluster_key = "clusters" if "--no-predicted" in sys.argv else "predicted_clusters"
     config['lm_path'] = "bert_features_predict.hdf5"
     if must_bertify:
       bertify(input_filename, config['lm_path'], config)
