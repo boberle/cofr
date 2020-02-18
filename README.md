@@ -3,7 +3,7 @@
 
 ## Introduction
 
-This repository contains an adaptation of the [Kantor and Globerson's coreference resolution tool](https://github.com/kentonl/e2e-coref) (described in Kantor and Globerson, 2019) to French.  The work is described in the following paper:
+This repository contains an adaptation of the [Kantor and Globerson's coreference resolution tool](https://github.com/kkjawz/coref-ee) (described in Kantor and Globerson, 2019) to French.  The work is described in the following paper:
 
 [Wilkens Rodrigo, Oberle Bruno, Landragin Frédéric, Todirascu Amalia (2020). **French coreference for spoken and written language**, _Proceedings of the 12th Edition of the Language Resources and Evaluation Conference (LREC 2020)_, Marseille, France](https://lrec2020.lrec-conf.org/en/).
 
