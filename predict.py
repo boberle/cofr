@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os
 import sys
 import json
 import subprocess
@@ -24,7 +25,8 @@ def bertify(fn, outfn, config):
     "--window_size=129",
     "--genres=" + ",".join(config['genres']),
   ]
-  env = {"PYTHONPATH": "."}
+  env = os.environ.copy()
+  env['PYTHONPATH'] = "."
   subprocess.run(args, env=env, check=True)
 
 
