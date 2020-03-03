@@ -160,7 +160,12 @@ head -n 5 test.french.jsonlines | shuf | head -n 1 > myfile.jsonlines
 python3 predict.py fr_ment,fr_coref myfile.jsonlines mypredictions.jsonlines
 ```
 
-To convert to the text or CoNLL formats, please see [these scripts](https://github.com/boberle/corefconversion).
+To convert to the text or CoNLL formats, please see [these
+scripts](https://github.com/boberle/corefconversion).  You may also want
+to import the annotated text into a software such as
+[TXM](http://textometrie.ens-lyon.fr/) for exploitation. Please see
+[this script](https://github.com/boberle/jsonlines2tei) to learn how to
+do this.
 
 
 ## Example
@@ -186,4 +191,6 @@ This work is published under the terms of the Apache 2.0 licence.  See the `LICE
 
 ## Acknowledgments
 
-This work was supported by the Democrat projects (DEscription et MOdélisation des Chaı̂nes de Référence: outils pour l'Annotation de corpus (en diachronie et en langues comparées) et le Traitement automatique) and Alector (Aide à la lecture pour enfants dyslexiques et faibles lecteurs), from the French National Research Agency (ANR) (ANR-16-CE28-0005 and ANR-15-CE38-0008, respectively).
+This work has been developped within the [Democrat project](https://anr.fr/Projet-ANR-15-CE38-0008) (DEscription et MOdélisation des Chaînes de Référence: outils pour l'Annotation de corpus (en diachronie et en langues comparées) et le Traitement automatique) and the [Alector project](https://anr.fr/Projet-ANR-16-CE28-0005) (Aide à la lecture pour enfants dyslexiques et faibles lecteurs), from the French National Research Agency (ANR) (ANR-16-CE28-0005 and ANR-15-CE38-0008, respectively).
+
+
