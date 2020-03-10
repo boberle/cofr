@@ -118,7 +118,7 @@ bash -x -e extract_bert_features.sh test.french.jsonlines evaluate
 python3 evaluate.py fr_ment,fr_coref test.french.jsonlines output.jsonlines
 ```
 
-This will download the corpus and our pretrained models.
+This will download the corpus and our pretrained models.  For more information on the corpora we used for training, see [here](https://github.com/boberle/coreference_databases).
 
 Note that the longest part is the bertification and should be done with a GPU.  As said before, you can reduce the window size to 129.  This would yield slightly lower results but will dramatically decrease the bertification time.
 
@@ -138,6 +138,9 @@ bash -x -e setup_training.sh
 python3 train.py train_fr_ment
 python3 train.py train_fr_coref
 ```
+
+The training corpora are available [here](https://github.com/boberle/coreference_databases).
+
 
 ### Predicting
 
