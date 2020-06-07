@@ -4,6 +4,6 @@ h5py
 nltk
 pyhocon
 scipy
-sklearn
+sklearn<=0.22.1
 tqdm
 colorama
